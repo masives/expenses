@@ -1,0 +1,42 @@
+version: '3.5'
+
+services:
+  node:
+    image: node:11-alpine
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    networks:
+      - expenses
+    ports:
+      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+    working_dir: /app
+
+  mongo:
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    image: mongo:3.2
+    volumes:
+      - './data/mongo:/data/db'
+    networks:
+      - expenses
+
+  mongo_express:
+    env_file:
+      - .env
+    image: library/mongo-express:latest
+    environment:
+      - ME_CONFIG_MONGODB_PORT=${MONGODB_PORT_NUMBER}
+      - ME_CONFIG_MONGODB_SERVER=${MONGO_SERVICE_HOST}
+    networks:
+      - expenses
+    ports:
+      - ${MONGO_EXPRESS_PORT}:8081
+    depends_on:
+      - mongo
+
+networks:
+  expenses:
+    name: expenses

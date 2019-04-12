@@ -1,20 +1,25 @@
 import * as express from 'express';
+import * as mongoose from 'mongoose';
 import * as next from 'next';
 
-// to be changed to Node_env
-const dev = true;
-const APPLICATION_PORT = 3000;
-const HOSTNAME = 'localhost';
+const { APPLICATION_PORT, MONGO_SERVICE_HOST, MONGODB_PORT_NUMBER, MONGO_DATABASE_NAME, NODE_ENV } = process.env;
+
+const dev = NODE_ENV === 'development';
+const HOSTNAME = '0.0.0.0';
 
 const app = next({ dev });
 const handleByNext = app.getRequestHandler();
+
+mongoose.connect(`mongodb://${MONGO_SERVICE_HOST}:${MONGODB_PORT_NUMBER}/${MONGO_DATABASE_NAME}`, {
+  useNewUrlParser: true,
+});
 
 app.prepare().then(() => {
   const server: express.Express = express();
 
   server.get('*', (req, res) => handleByNext(req, res));
 
-  server.listen(APPLICATION_PORT, HOSTNAME, (err: any) => {
+  server.listen(Number(APPLICATION_PORT), HOSTNAME, (err: any) => {
     console.log(`Server is listening on host ${HOSTNAME} port ${APPLICATION_PORT}`);
 
     if (err) {
