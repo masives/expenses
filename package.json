@@ -8,8 +8,8 @@
   "private": false,
   "scripts": {
     "dev": "nodemon server/index.ts",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && tsc --project tsconfig.server.json",
+    "start": "node .next/production-server/index.js",
     "type-check": "tsc"
   },
   "dependencies": {

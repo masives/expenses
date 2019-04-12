@@ -15,7 +15,7 @@ build: ## prepare production build
 	docker-compose run  -u "$(USER_ID)" -e NODE_ENV=production --rm  node yarn build
 
 start: ## run production build
-	docker-compose run  -u "$(USER_ID)" --name "expenses_prod" --rm --service-ports node yarn build
+	docker-compose run  -u "$(USER_ID)" --name "expenses_prod" --rm --service-ports node yarn start
 
 install: ## install dependencies
 	docker-compose run  -u "$(USER_ID)"  --rm node yarn 
