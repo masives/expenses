@@ -1,6 +1,8 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as next from 'next';
+import apiRouter from './api';
+import useParsers from './middleware/parsers';
 
 const { APPLICATION_PORT, MONGO_SERVICE_HOST, MONGODB_PORT_NUMBER, MONGO_DATABASE_NAME, NODE_ENV } = process.env;
 
@@ -16,6 +18,9 @@ mongoose.connect(`mongodb://${MONGO_SERVICE_HOST}:${MONGODB_PORT_NUMBER}/${MONGO
 
 app.prepare().then(() => {
   const server: express.Express = express();
+  useParsers(server);
+
+  server.use('/api', apiRouter);
 
   server.get('*', (req, res) => handleByNext(req, res));
 
