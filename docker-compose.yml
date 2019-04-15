@@ -10,6 +10,8 @@ services:
     ports:
       - ${APPLICATION_PORT}:${APPLICATION_PORT}
     working_dir: /app
+    depends_on:
+      - mongo
 
   mongo:
     environment:

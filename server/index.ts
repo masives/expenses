@@ -12,9 +12,14 @@ const HOSTNAME = '0.0.0.0';
 const app = next({ dev });
 const handleByNext = app.getRequestHandler();
 
-mongoose.connect(`mongodb://${MONGO_SERVICE_HOST}:${MONGODB_PORT_NUMBER}/${MONGO_DATABASE_NAME}`, {
-  useNewUrlParser: true,
-});
+mongoose
+  .connect(`mongodb://${MONGO_SERVICE_HOST}:${MONGODB_PORT_NUMBER}/${MONGO_DATABASE_NAME}`, {
+    useNewUrlParser: true,
+  })
+  .catch((error) => {
+    console.log(`mongo error ${error}`);
+    process.exit(1);
+  });
 
 app.prepare().then(() => {
   const server: express.Express = express();
