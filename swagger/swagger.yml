@@ -1,0 +1,15 @@
+openapi: '3.0.0'
+info:
+  title: Expenses api
+  description: 'My first swagger'
+paths:
+  /users:
+    get:
+      description: Returns users
+      response:
+        '200':
+          description: A list of pets.
+          content:
+            application/json:
+              schema:
+                type: array
