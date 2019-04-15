@@ -20,6 +20,9 @@ start: ## run production build
 install: ## install dependencies
 	docker-compose run  -u "$(USER_ID)"  --rm node yarn 
 
+add: ## add new node module
+	docker-compose run  -u "$(USER_ID)" --rm node yarn add ${args}
+
 seed: ## seed database
 	docker-compose run  -u "$(USER_ID)"  --rm node yarn seed 
 
