@@ -2,14 +2,117 @@ openapi: '3.0.0'
 info:
   title: Expenses api
   description: 'My first swagger'
+tags:
+  - name: user
+    description: User data
+  - name: expense
+    description: Data related to expense entries
 paths:
   /users:
     get:
       description: Returns users
-      response:
+      tags:
+        - user
+      responses:
         '200':
-          description: A list of pets.
           content:
             application/json:
               schema:
                 type: array
+                items:
+                  $ref: '#/components/schemas/user'
+  /user/id:
+    get:
+      description: Returns given user
+      tags:
+        - user
+      parameters:
+        id:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+  /expense/id:
+    get:
+      tags:
+        - expense
+      description: show expense by id
+      parameters:
+        id:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/expense'
+
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+    expense:
+      type: object
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+        categoryID:
+          type: string
+        subcategoryID:
+          type: string
+        date:
+          type: date
+    savingsGoal:
+      type: object
+      properties:
+        id:
+          type: string
+        totalValue:
+          type: int
+        currentValue:
+          type: int
+        name:
+          type: string
+    recurringActions:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - expense
+            - gain
+            - saving
+        savingId:
+          type: string
+          description: Only required for saving type
+        value:
+          type: int
+    category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    subcategory:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categoryId:
+          type: string
