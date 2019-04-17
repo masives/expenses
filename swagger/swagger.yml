@@ -9,6 +9,8 @@ tags:
     description: Data related to expense entries
   - name: savingsGoal
     description: Data related to saving goals entries
+  - name: category
+    description: Data related to categories
 paths:
   /user:
     get:
@@ -199,6 +201,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/savingsGoal'
 
+  /category/id:
+    get:
+      tags:
+        - category
+      description: show category by id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+    put:
+      tags:
+        - category
+      description: update category by id
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+  /categories:
+    get:
+      tags:
+        - category
+      description: show all categories for current user
+      parameters:
+        id:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/category'
+
 components:
   schemas:
     user:
@@ -257,6 +302,11 @@ components:
           type: string
         name:
           type: string
+        subcategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/subcategory'
+
     subcategory:
       type: object
       properties:
