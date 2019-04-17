@@ -243,6 +243,48 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/category'
+  /subcategory/id:
+    get:
+      tags:
+        - category
+      description: show subcategory by id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subcategory'
+    put:
+      tags:
+        - category
+      description: update subcategory by id
+      parameters:
+        - in: path
+          name: name
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/category'
+  /subcategories/id:
+    get:
+      tags:
+        - category
+      description: show all subcategories categories for given category
+      parameters:
+        id:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/subcategory'
 
 components:
   schemas:
