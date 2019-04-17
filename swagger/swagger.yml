@@ -7,12 +7,91 @@ tags:
     description: User data
   - name: expense
     description: Data related to expense entries
+  - name: savingsGoal
+    description: Data related to saving goals entries
 paths:
-  /users:
+  /user:
     get:
-      description: Returns users
+      description: Returns current user
       tags:
         - user
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+  # user management apis that are not to be implemeneted unless I will create some admin view
+  # /users:
+  #   get:
+  #     description: Returns users
+  #     tags:
+  #       - user
+  #     responses:
+  #       '200':
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/user'
+  # /user/id:
+  #   get:
+  #     description: Returns given user
+  #     tags:
+  #       - user
+  #     parameters:
+  #       id:
+  #         type: string
+  #     responses:
+  #       '200':
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/user'
+
+  /expense/id:
+    get:
+      tags:
+        - expense
+      description: show expense by id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/expense'
+    put:
+      tags:
+        - expense
+      description: update expense by id
+      parameters:
+        - in: path
+          name: value
+          schema:
+            type: number
+        - in: path
+          name: subcategoryId
+          schema:
+            type: number
+        - in: path
+          name: description
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/expense'
+  /expenses:
+    get:
+      tags:
+        - expense
+      description: show all expenses for current user
+      parameters:
+        id:
+          type: string
       responses:
         '200':
           content:
@@ -20,36 +99,105 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/user'
-  /user/id:
-    get:
-      description: Returns given user
-      tags:
-        - user
-      parameters:
-        id:
-          type: string
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-
-  /expense/id:
-    get:
+                  $ref: '#/components/schemas/expense'
+  /expense:
+    post:
       tags:
         - expense
-      description: show expense by id
-      parameters:
-        id:
-          type: string
+      description: add new expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                value:
+                  type: number
+                subcategoryId:
+                  type: number
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/expense'
+
+  /savings-goal/id:
+    get:
+      tags:
+        - savingsGoal
+      description: show expense by id
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/savingsGoal'
+    put:
+      tags:
+        - savingsGoal
+      description: update expense by id
+      parameters:
+        - in: path
+          name: value
+          schema:
+            type: number
+        - in: path
+          name: totalValue
+          schema:
+            type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/savingsGoal'
+
+  /savings-goals:
+    get:
+      tags:
+        - savingsGoal
+      description: get all savings goals for current user
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/savingsGoal'
+  /savings-goal:
+    post:
+      tags:
+        - savingsGoal
+      description: add new savings goal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                totalValue:
+                  type: number
+                currentValue:
+                  type: number
+        name:
+          type: string
+        totalValue:
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/savingsGoal'
 
 components:
   schemas:
@@ -60,6 +208,8 @@ components:
           type: string
         username:
           type: string
+        currentBalance:
+          type: number
     expense:
       type: object
       properties:
@@ -67,21 +217,21 @@ components:
           type: string
         value:
           type: string
-        categoryID:
-          type: string
-        subcategoryID:
+        subcategoryId:
           type: string
         date:
-          type: date
+          type: string
+        description:
+          type: string
     savingsGoal:
       type: object
       properties:
         id:
           type: string
         totalValue:
-          type: int
+          type: number
         currentValue:
-          type: int
+          type: number
         name:
           type: string
     recurringActions:
@@ -99,7 +249,7 @@ components:
           type: string
           description: Only required for saving type
         value:
-          type: int
+          type: number
     category:
       type: object
       properties:
