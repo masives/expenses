@@ -5,8 +5,8 @@ info:
 tags:
   - name: user
     description: User data
-  - name: expense
-    description: Data related to expense entries
+  - name: financial-transaction
+    description: Data related to financial-transaction entries
   - name: savingsGoal
     description: Data related to saving goals entries
   - name: category
@@ -52,21 +52,21 @@ paths:
   #             schema:
   #               $ref: '#/components/schemas/user'
 
-  /expense/id:
+  /financial-transaction/id:
     get:
       tags:
-        - expense
-      description: show expense by id
+        - financial-transaction
+      description: show financial-transaction by id
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/expense'
+                $ref: '#/components/schemas/financial-transaction'
     put:
       tags:
-        - expense
-      description: update expense by id
+        - financial-transaction
+      description: update financial-transaction by id
       parameters:
         - in: path
           name: value
@@ -85,12 +85,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/expense'
-  /expenses:
+                $ref: '#/components/schemas/financial-transaction'
+  /financial-transactions:
     get:
       tags:
-        - expense
-      description: show all expenses for current user
+        - financial-transaction
+      description: show all financial-transactions for current user
       parameters:
         id:
           type: string
@@ -101,12 +101,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/expense'
-  /expense:
+                  $ref: '#/components/schemas/financial-transaction'
+  /financial-transaction:
     post:
       tags:
-        - expense
-      description: add new expense
+        - financial-transaction
+      description: add new financial-transaction
       requestBody:
         required: true
         content:
@@ -125,13 +125,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/expense'
+                $ref: '#/components/schemas/financial-transaction'
 
   /savings-goal/id:
     get:
       tags:
         - savingsGoal
-      description: show expense by id
+      description: show financial-transaction by id
       responses:
         '200':
           content:
@@ -141,7 +141,7 @@ paths:
     put:
       tags:
         - savingsGoal
-      description: update expense by id
+      description: update financial-transaction by id
       parameters:
         - in: path
           name: value
@@ -297,7 +297,7 @@ components:
           type: string
         currentBalance:
           type: number
-    expense:
+    financial-transaction:
       type: object
       properties:
         id:
@@ -308,8 +308,19 @@ components:
           type: string
         date:
           type: string
+          format: date
         description:
           type: string
+        type:
+          type: string
+          enum:
+            $ref: '#/components/schemas/financial-transaction-type'
+    financial-transaction-type:
+      type: string
+      enum:
+        - expense
+        - gain
+        - saving
     savingsGoal:
       type: object
       properties:
@@ -329,7 +340,7 @@ components:
         type:
           type: string
           enum:
-            - expense
+            - financial-transaction
             - gain
             - saving
         savingId:
@@ -348,7 +359,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/subcategory'
-
     subcategory:
       type: object
       properties:
