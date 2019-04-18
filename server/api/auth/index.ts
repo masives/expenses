@@ -8,14 +8,15 @@ const authRouter = express.Router();
 
 authRouter.post('/login', async (req: express.Request, res: express.Response) => {
   const { username, password }: IUser = req.body;
-  if (!username || !password) return res.sendStatus(400);
+  if (!username || !password) return res.status(400).send('Provide credentials');
 
   const user = await findUserByUsername(username);
 
   if (user) {
-    const isPasswordMatching = comparePassword(password, user.password);
+    const isPasswordMatching = await comparePassword(password, user.password);
+    console.log(isPasswordMatching);
 
-    if (!isPasswordMatching) return res.sendStatus(401);
+    if (!isPasswordMatching) return res.status(400).send('Incorrect credentials');
 
     const token = generateJWTToken(user.username);
 
