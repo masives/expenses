@@ -14,7 +14,6 @@ authRouter.post('/login', async (req: express.Request, res: express.Response) =>
 
   if (user) {
     const isPasswordMatching = await comparePassword(password, user.password);
-    console.log(isPasswordMatching);
 
     if (!isPasswordMatching) return res.status(401).send('Incorrect credentials');
 
