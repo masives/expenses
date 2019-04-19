@@ -17,6 +17,12 @@ build: ## prepare production build
 start: ## run production build
 	docker-compose run  -u "$(USER_ID)" --name "expenses_prod" --rm --service-ports node yarn start
 
+test: ## run production build
+	docker-compose run  -u "$(USER_ID)" node yarn test
+
+test--watch: ## run production build
+	docker-compose run  -u "$(USER_ID)" node yarn test:watch
+
 install: ## install dependencies
 	docker-compose run  -u "$(USER_ID)"  --rm node yarn 
 

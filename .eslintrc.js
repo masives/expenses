@@ -15,10 +15,7 @@ module.exports = {
     useJSXTextNode: true,
   },
   rules: {
-    '@typescript-eslint/explicit-function-return-type': [
-      'error',
-      { allowExpressions: true, allowTypedFunctionExpressions: true },
-    ],
+    '@typescript-eslint/explicit-function-return-type': ['off'],
     '@typescript-eslint/interface-name-prefix': ['error', 'always'],
     '@typescript-eslint/explicit-member-accessibility': ['off'],
   },

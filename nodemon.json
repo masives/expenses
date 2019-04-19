@@ -1,5 +1,6 @@
 {
   "watch": ["server/**/*.ts"],
+  "ignore": ["*.test.ts"],
   "execMap": {
     "ts": "ts-node --project tsconfig.server.json"
   }
