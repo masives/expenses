@@ -16,7 +16,7 @@ authRouter.post('/login', async (req: express.Request, res: express.Response) =>
     const isPasswordMatching = await comparePassword(password, user.password);
     console.log(isPasswordMatching);
 
-    if (!isPasswordMatching) return res.status(400).send('Incorrect credentials');
+    if (!isPasswordMatching) return res.status(401).send('Incorrect credentials');
 
     const token = generateJWTToken(user.username);
 
@@ -25,7 +25,7 @@ authRouter.post('/login', async (req: express.Request, res: express.Response) =>
       .cookie('jwt', token)
       .send(token);
   }
-  return res.sendStatus(401);
+  return res.status(401).send('Incorrect credentials');
 });
 
 export default authRouter;
