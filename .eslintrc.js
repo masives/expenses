@@ -1,6 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
+    'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
@@ -15,7 +16,10 @@ module.exports = {
     useJSXTextNode: true,
   },
   rules: {
-    '@typescript-eslint/explicit-function-return-type': ['off'],
+    '@typescript-eslint/explicit-function-return-type': [
+      'error',
+      { allowExpressions: true, allowTypedFunctionExpressions: true },
+    ],
     '@typescript-eslint/interface-name-prefix': ['error', 'always'],
     '@typescript-eslint/explicit-member-accessibility': ['off'],
   },
@@ -25,4 +29,5 @@ module.exports = {
     },
   },
   plugins: ['@typescript-eslint'],
+  env: { node: true, es6: true, jest: true, browser: true },
 };

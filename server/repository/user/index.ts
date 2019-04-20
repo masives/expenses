@@ -25,8 +25,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema({
 
 const UserModel: mongoose.Model<IUserModel> = mongoose.model('users', UserSchema);
 
-export const addUser = (user: IUser) => UserModel.create(user);
+export const addUser = (user: IUser): Promise<IUserModel> => UserModel.create(user);
 
-export const findUserByUsername = (username: string) => UserModel.findOne({ username });
+export const findUserByUsername = (username: string): mongoose.DocumentQuery<IUserModel | null, IUserModel, {}> =>
+  UserModel.findOne({ username });
 
 export default UserModel;

@@ -13,7 +13,8 @@
     "seed": "ts-node --compiler-options '{\"module\":\"commonjs\"}'  ./scripts/seed.ts",
     "type-check": "tsc",
     "test": "jest",
-    "test:watch": "yarn test --watchAll"
+    "test:watch": "yarn test --watchAll",
+    "lint": "yarn eslint --ext ts --ext tsx ./components ./pages ./server"
   },
   "dependencies": {
     "@zeit/next-typescript": "^1.1.1",

@@ -1,7 +1,7 @@
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 
-const useParsers = (server) => {
+const useParsers = (server): void => {
   server.use(
     bodyParser.urlencoded({
       extended: true,

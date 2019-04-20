@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as next from 'next';
