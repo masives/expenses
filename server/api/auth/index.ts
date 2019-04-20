@@ -5,8 +5,8 @@ import { comparePassword } from '../../utils/crypto';
 import { generateJWTToken } from '../..//utils/jwt';
 
 export const ERRORS = {
-  PROVIDE_CREDENTIALS: 'Provide credentials',
   INCORRECT_CREDENTIALS: 'Incorrect credentials',
+  PROVIDE_CREDENTIALS: 'Provide credentials',
 };
 
 const authRouter = express.Router();

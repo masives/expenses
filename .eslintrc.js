@@ -16,12 +16,15 @@ module.exports = {
     useJSXTextNode: true,
   },
   rules: {
+    // typescript
     '@typescript-eslint/explicit-function-return-type': [
       'error',
       { allowExpressions: true, allowTypedFunctionExpressions: true },
     ],
     '@typescript-eslint/interface-name-prefix': ['error', 'always'],
     '@typescript-eslint/explicit-member-accessibility': ['off'],
+    // general
+    'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false }],
   },
   settings: {
     react: {

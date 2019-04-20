@@ -9,7 +9,7 @@ describe('Api - login', () => {
     const password = seededUser.password;
 
     //when
-    const response = await axios.post(`${apiEndpoint}api/auth/login`, { username, password });
+    const response = await axios.post(`${apiEndpoint}api/auth/login`, { password, username });
     // then
     expect(response.status).toEqual(200);
     expect(response.headers['set-cookie'][0]).toEqual(expect.stringContaining('jwt'));
@@ -51,7 +51,7 @@ describe('Api - login', () => {
     const password = 'someInvalidPassword';
 
     //when
-    await axios.post(`${apiEndpoint}api/auth/login`, { username, password }).catch(({ response }) => {
+    await axios.post(`${apiEndpoint}api/auth/login`, { password, username }).catch(({ response }) => {
       // then
       expect(response.status).toEqual(401);
       expect(response.data).toEqual(ERRORS.INCORRECT_CREDENTIALS);
