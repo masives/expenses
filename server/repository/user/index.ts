@@ -3,7 +3,7 @@ import * as uniqueValidator from 'mongoose-unique-validator';
 import { hashPassword } from '../../utils/crypto';
 import { IUser } from '../../../types/User';
 
-interface IUserModel extends mongoose.Document, IUser {}
+export interface IUserModel extends mongoose.Document, IUser {}
 
 const UserSchema: mongoose.Schema = new mongoose.Schema({
   password: {

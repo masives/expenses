@@ -11,7 +11,7 @@ export const ERRORS = {
 
 const authRouter = express.Router();
 
-authRouter.post('/login', async (req: express.Request, res: express.Response) => {
+export const login: express.RequestHandler = async (req: express.Request, res: express.Response) => {
   const { username, password }: IUser = req.body;
   if (!username || !password) return res.status(400).send(ERRORS.PROVIDE_CREDENTIALS);
 
@@ -30,6 +30,8 @@ authRouter.post('/login', async (req: express.Request, res: express.Response) =>
       .send(token);
   }
   return res.status(401).send(ERRORS.INCORRECT_CREDENTIALS);
-});
+};
+
+authRouter.post('/login', login);
 
 export default authRouter;

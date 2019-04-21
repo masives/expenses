@@ -17,7 +17,7 @@ const login = (user, errorSetter): void => {
 const Login: React.FunctionComponent = () => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const user = { username, password };
+  const user = { password, username };
   const [errorMessage, setErrorMessage] = React.useState('');
   return (
     <form
