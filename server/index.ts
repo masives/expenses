@@ -3,11 +3,11 @@ import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as next from 'next';
 import * as passport from 'passport';
-import apiRouter from './api';
 import useParsers from './middleware/parsers';
 import { authenticateWith401Response, authenticateWithRedirect } from './middleware/authentication';
-import { login } from './api/auth';
 import jwtStrategy from './middleware/authentication/jwtStrategy';
+import apiRouter from './api';
+import { login } from './api/auth';
 
 const { APPLICATION_PORT, MONGO_SERVICE_HOST, MONGODB_PORT_NUMBER, MONGO_DATABASE_NAME, NODE_ENV } = process.env;
 
