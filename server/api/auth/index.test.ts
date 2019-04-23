@@ -9,7 +9,7 @@ describe('Api - login', () => {
     const password = seededUser.password;
 
     //when
-    const response = await axios.post(`${apiEndpoint}api/auth/login`, { password, username });
+    const response = await axios.post(`${apiEndpoint}/auth/login`, { password, username });
     // then
     expect(response.status).toEqual(200);
     expect(response.headers['set-cookie'][0]).toEqual(expect.stringContaining('jwt'));
@@ -17,7 +17,7 @@ describe('Api - login', () => {
   describe('should return error on invalid request', () => {
     it('empty request', async () => {
       // when
-      await axios.post(`${apiEndpoint}api/auth/login`).catch(({ response }) => {
+      await axios.post(`${apiEndpoint}/auth/login`).catch(({ response }) => {
         // then
         expect(response.status).toEqual(400);
         expect(response.data).toEqual(ERRORS.PROVIDE_CREDENTIALS);
@@ -27,7 +27,7 @@ describe('Api - login', () => {
       //given
       const password = seededUser.password;
       // when
-      await axios.post(`${apiEndpoint}api/auth/login`, { password }).catch(({ response }) => {
+      await axios.post(`${apiEndpoint}/auth/login`, { password }).catch(({ response }) => {
         // then
         expect(response.status).toEqual(400);
         expect(response.data).toEqual(ERRORS.PROVIDE_CREDENTIALS);
@@ -37,7 +37,7 @@ describe('Api - login', () => {
       //given
       const username = seededUser.username;
       // when
-      await axios.post(`${apiEndpoint}api/auth/login`, username).catch(({ response }) => {
+      await axios.post(`${apiEndpoint}/auth/login`, username).catch(({ response }) => {
         // then
         expect(response.status).toEqual(400);
         expect(response.data).toEqual(ERRORS.PROVIDE_CREDENTIALS);
@@ -51,7 +51,7 @@ describe('Api - login', () => {
     const password = 'someInvalidPassword';
 
     //when
-    await axios.post(`${apiEndpoint}api/auth/login`, { password, username }).catch(({ response }) => {
+    await axios.post(`${apiEndpoint}/auth/login`, { password, username }).catch(({ response }) => {
       // then
       expect(response.status).toEqual(401);
       expect(response.data).toEqual(ERRORS.INCORRECT_CREDENTIALS);
