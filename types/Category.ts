@@ -1,7 +1,7 @@
 export interface ICategory {
   id?: any;
   name: string;
-  subcategories?: ISubcategory[];
+  subcategories: ISubcategory[];
 }
 
 export interface ISubcategory {
