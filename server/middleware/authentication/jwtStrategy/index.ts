@@ -19,6 +19,7 @@ const jwtStrategy: passportJwt.Strategy = new Strategy(options, async (jwtPayloa
   return user
     ? done(null, {
         isAdministrator: user.username === ADMIN_USERNAME,
+        userId: user.id,
         username,
       })
     : done(null, false);
