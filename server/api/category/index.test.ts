@@ -28,8 +28,9 @@ const addTestCategory = async (categoryName: string, subcategories: string[]): P
   const subcategoriesIds = addedSubcategories.map((subcategory) => subcategory.id);
 
   const createdCategory = await addCategory(categoryName, subcategoriesIds, adminUser.id);
+  const populatedCategory = await createdCategory.populate('subcategories').execPopulate();
   await dbConnection.connection.close();
-  return createdCategory;
+  return populatedCategory;
 };
 
 describe('Api - category', () => {
@@ -56,6 +57,38 @@ describe('Api - category', () => {
         _id: expect.any(String),
         name: subcategoryName,
       })),
+    });
+  });
+
+  it("PUT /category/:id should update category and it's  subcategories", async () => {
+    // given
+    const subcategories = ['rent', 'electricity'];
+    const categoryName = 'House';
+
+    const createdCategory = await addTestCategory(categoryName, subcategories);
+    const createdCategoryId = createdCategory.id;
+
+    const newCategoryName = 'Home';
+    const newSubcategories = ['water', 'internet'];
+
+    const categoryUpdate = {
+      name: newCategoryName,
+      subcategories: createdCategory.subcategories.map((subcategory, index) => ({
+        id: subcategory.id,
+        name: newSubcategories[index],
+      })),
+    };
+
+    // when
+    const response = await axios.put(`${apiEndpoint}/category/${createdCategoryId}`, categoryUpdate, {
+      headers,
+    });
+
+    // then
+    expect(response.data).toMatchObject({
+      _id: expect.any(String),
+      name: newCategoryName,
+      subcategories: categoryUpdate.subcategories,
     });
   });
 
