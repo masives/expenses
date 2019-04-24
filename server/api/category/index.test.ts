@@ -35,25 +35,6 @@ const addTestCategory = async (categoryName: string, subcategories: string[]): P
 describe('Api - category', () => {
   const headers = getLoggedInHeaders();
   // it('GET /category')
-  it('POST /category should create category with subcategories', async () => {
-    // given
-    const newCategory = { categoryName: 'house', subcategories: ['rent', 'electricity', 'internet'] };
-
-    // when
-    const response = await axios.post(`${apiEndpoint}/category`, newCategory, {
-      headers,
-    });
-
-    // then
-    expect(response.data).toMatchObject({
-      _id: expect.any(String),
-      name: newCategory.categoryName,
-      subcategories: newCategory.subcategories.map((subcategoryName) => ({
-        _id: expect.any(String),
-        name: subcategoryName,
-      })),
-    });
-  });
 
   it('GET /category/id should return single category', async () => {
     // given
@@ -72,6 +53,26 @@ describe('Api - category', () => {
       _id: expect.any(String),
       name: categoryName,
       subcategories: subcategories.map((subcategoryName) => ({
+        _id: expect.any(String),
+        name: subcategoryName,
+      })),
+    });
+  });
+
+  it('POST /category should create category with subcategories', async () => {
+    // given
+    const newCategory = { categoryName: 'house', subcategories: ['rent', 'electricity', 'internet'] };
+
+    // when
+    const response = await axios.post(`${apiEndpoint}/category`, newCategory, {
+      headers,
+    });
+
+    // then
+    expect(response.data).toMatchObject({
+      _id: expect.any(String),
+      name: newCategory.categoryName,
+      subcategories: newCategory.subcategories.map((subcategoryName) => ({
         _id: expect.any(String),
         name: subcategoryName,
       })),
