@@ -26,8 +26,11 @@ const CategoryModel: mongoose.Model<ICategoryModel> = mongoose.model('categories
 export const addCategory = (categoryName: string, subcategoryIds: string[], userId: string): Promise<ICategoryModel> =>
   CategoryModel.create({ name: categoryName, subcategories: subcategoryIds, userId });
 
-export const findCategoriesForUser = (userId): mongoose.DocumentQuery<ICategoryModel[], ICategoryModel, {}> =>
+export const findCategoriesForUser = (userId: string): mongoose.DocumentQuery<ICategoryModel[], ICategoryModel, {}> =>
   CategoryModel.find({ userId }).populate('subcategories');
+
+export const findCategoryById = (categoryId: string): mongoose.DocumentQuery<ICategoryModel | null, ICategoryModel> =>
+  CategoryModel.findById(categoryId).populate('subcategories');
 
 export const appendSubcategory = (categoryId, subcategoryId): mongoose.Query<any> =>
   CategoryModel.updateOne({ _id: categoryId }, { $push: { subcategories: subcategoryId } });
