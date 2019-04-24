@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { ICategory } from '../../../types/Category';
 
-interface ICategoryModel extends mongoose.Document, ICategory {}
+export interface ICategoryModel extends mongoose.Document, ICategory {}
 
 const CategorySchema: mongoose.Schema = new mongoose.Schema({
   name: {
