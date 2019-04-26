@@ -1,10 +1,10 @@
 import * as React from 'react';
 import axios from 'axios';
 import { NextFunctionComponent, NextContext } from 'next';
-import { ICategory } from 'types/Category';
+import { ICreatedCategory } from 'types/Category';
 
 const Categories: NextFunctionComponent = () => {
-  const [categories, setCategories] = React.useState<ICategory[]>([]);
+  const [categories, setCategories] = React.useState<ICreatedCategory[]>([]);
   React.useEffect(() => {
     // change to getInitialProps
     axios.get('api/category').then((response) => {
@@ -15,7 +15,7 @@ const Categories: NextFunctionComponent = () => {
   return (
     <React.Fragment>
       <div>it works</div>
-      {categories.map((category: ICategory) => {
+      {categories.map((category: ICreatedCategory) => {
         return (
           <React.Fragment key={category.id}>
             <h2>{category.name}</h2>

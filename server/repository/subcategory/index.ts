@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
-import { ISubcategory } from '../../../types/Category';
+import { INewSubcategory, ICreatedSubcategory } from '../../../types/Category';
 
-interface ISubcategoryModel extends mongoose.Document, ISubcategory {}
+interface ISubcategoryModel extends mongoose.Document, ICreatedSubcategory {}
 
 const SubcategorySchema: mongoose.Schema = new mongoose.Schema({
   name: {
@@ -17,7 +17,7 @@ const SubcategorySchema: mongoose.Schema = new mongoose.Schema({
 
 export const SubcategoryModel: mongoose.Model<ISubcategoryModel> = mongoose.model('Subcategory', SubcategorySchema);
 
-export const addSubcategory = (subcategory: ISubcategory[]): Promise<ISubcategoryModel[]> => {
+export const addSubcategory = (subcategory: INewSubcategory[]): Promise<ISubcategoryModel[]> => {
   return SubcategoryModel.create(subcategory);
 };
 

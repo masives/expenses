@@ -1,51 +1,23 @@
 import axios from 'axios';
-import * as mongoose from 'mongoose';
-import { apiEndpoint, getLoggedInHeaders, getAdminUser } from '../../../test-utils';
-import { addSubcategory } from '../../repository/subcategory';
-import { addCategory, ICategoryModel } from '../../repository/category';
-
-const establishDbConnection = async (): Promise<typeof mongoose> => {
-  const { MONGO_SERVICE_HOST, MONGODB_PORT_NUMBER, MONGO_DATABASE_NAME } = process.env;
-  const connection = await mongoose.connect(
-    `mongodb://${MONGO_SERVICE_HOST}:${MONGODB_PORT_NUMBER}/${MONGO_DATABASE_NAME}`,
-    {
-      useNewUrlParser: true,
-    }
-  );
-
-  return connection;
-};
-
-const addTestCategory = async (categoryName: string, subcategories: string[]): Promise<ICategoryModel> => {
-  const dbConnection = await establishDbConnection();
-  const adminUser = await getAdminUser();
-  const addedSubcategories = await addSubcategory(
-    subcategories.map((subcategoryName) => ({
-      name: subcategoryName,
-      userId: adminUser.id,
-    }))
-  );
-  const subcategoriesIds = addedSubcategories.map((subcategory) => subcategory.id);
-
-  const createdCategory = await addCategory(categoryName, subcategoriesIds, adminUser.id);
-  const populatedCategory = await createdCategory.populate('subcategories').execPopulate();
-  await dbConnection.connection.close();
-  return populatedCategory;
-};
+import { apiEndpoint, getLoggedInHeaders } from '../../../test-utils';
+import { ICreatedCategory } from 'types/Category';
 
 describe('Api - category', () => {
   const headers = getLoggedInHeaders();
-  // it('GET /category')
 
   it('GET /category/id should return single category', async () => {
     // given
-    const subcategories = ['rent', 'electricity'];
     const categoryName = 'House';
-
-    const createdCategory = await addTestCategory(categoryName, subcategories);
-
+    const subcategories = ['rent', 'electricity', 'internet'];
+    const newCategory = {
+      categoryName,
+      subcategories,
+    };
+    const { data: createdCategory } = await axios.post<ICreatedCategory>(`${apiEndpoint}/category`, newCategory, {
+      headers,
+    });
     // when
-    const response = await axios.get(`${apiEndpoint}/category/${createdCategory.id}`, {
+    const response = await axios.get<ICreatedCategory>(`${apiEndpoint}/category/${createdCategory._id}`, {
       headers,
     });
 
@@ -60,42 +32,90 @@ describe('Api - category', () => {
     });
   });
 
-  it("PUT /category/:id should update category and it's  subcategories", async () => {
-    // given
-    const subcategories = ['rent', 'electricity'];
-    const categoryName = 'House';
+  describe('PUT /category/:id ', () => {
+    it('should update category name', async () => {
+      // given
+      const categoryName = 'House';
+      const subcategories = ['rent', 'electricity', 'internet'];
+      const newCategory = {
+        categoryName,
+        subcategories,
+      };
+      const { data: createdCategory } = await axios.post<ICreatedCategory>(`${apiEndpoint}/category`, newCategory, {
+        headers,
+      });
 
-    const createdCategory = await addTestCategory(categoryName, subcategories);
-    const createdCategoryId = createdCategory.id;
+      // when
+      const newCategoryName = 'Home';
 
-    const newCategoryName = 'Home';
-    const newSubcategories = ['water', 'internet'];
+      const categoryUpdate = {
+        name: newCategoryName,
+      };
+      const response = await axios.put(`${apiEndpoint}/category/${createdCategory._id}`, categoryUpdate, {
+        headers,
+      });
 
-    const categoryUpdate = {
-      name: newCategoryName,
-      subcategories: createdCategory.subcategories.map((subcategory, index) => ({
-        id: subcategory.id,
-        name: newSubcategories[index],
-      })),
-    };
-
-    // when
-    const response = await axios.put(`${apiEndpoint}/category/${createdCategoryId}`, categoryUpdate, {
-      headers,
+      // then
+      expect(response.data).toMatchObject({
+        _id: createdCategory._id,
+        name: newCategoryName,
+      });
     });
+    it('should update category existing subcategories, add new ones', async () => {
+      // given
+      const categoryName = 'House';
+      const unChangedSubcategoryName = 'rent';
+      const changedSubcategoryName = 'electricity';
+      const newCategory = {
+        categoryName,
+        subcategories: [unChangedSubcategoryName, changedSubcategoryName],
+      };
+      const { data: createdCategory } = await axios.post<ICreatedCategory>(`${apiEndpoint}/category`, newCategory, {
+        headers,
+      });
+      const createdSubcategories = createdCategory.subcategories;
+      const categoryNotToBeUpdated = createdSubcategories.find(
+        (subcategory) => subcategory.name === unChangedSubcategoryName
+      );
 
-    // then
-    expect(response.data).toMatchObject({
-      _id: expect.any(String),
-      name: newCategoryName,
-      subcategories: categoryUpdate.subcategories,
+      // when
+      const newSubcategories = [{ name: 'water' }];
+      const updatedCategoryName = 'repairs';
+      const categoryToBeUpdated = createdSubcategories.find(
+        (subcategory) => subcategory.name === changedSubcategoryName
+      );
+      const updatedCategory = { id: (categoryToBeUpdated as any)._id, name: updatedCategoryName };
+
+      const categoryUpdate = {
+        subcategories: [...newSubcategories, updatedCategory],
+      };
+
+      const response = await axios.put(`${apiEndpoint}/category/${createdCategory._id}`, categoryUpdate, {
+        headers,
+      });
+
+      // then
+      expect(response.data._id).toEqual(createdCategory._id);
+      // by to zadziałało chyba musze obie tablice posortować według tego samego klucza
+      expect(response.data.subcategories).toEqual(
+        expect.arrayContaining([
+          // 3 obiekty, 1 nowe, jeden stary, jeden update
+          expect.objectContaining(updatedCategory),
+          expect.objectContaining(categoryNotToBeUpdated as any),
+          expect.objectContaining(updatedCategory),
+        ])
+      );
     });
   });
 
   it('POST /category should create category with subcategories', async () => {
     // given
-    const newCategory = { categoryName: 'house', subcategories: ['rent', 'electricity', 'internet'] };
-
+    const categoryName = 'House';
+    const subcategories = ['rent', 'electricity', 'internet'];
+    const newCategory = {
+      categoryName,
+      subcategories,
+    };
     // when
     const response = await axios.post(`${apiEndpoint}/category`, newCategory, {
       headers,

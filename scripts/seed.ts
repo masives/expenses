@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 
 import { addUser } from '../server/repository/user';
 import { addSubcategory } from '../server/repository/subcategory';
-import { ISubcategory } from '../types/Category';
+import { INewSubcategory } from '../types/Category';
 import { addCategory } from '../server/repository/category';
 
 const { ADMIN_USERNAME, ADMIN_PASSWORD, MONGO_SERVICE_HOST, MONGODB_PORT_NUMBER, MONGO_DATABASE_NAME } = process.env;
@@ -22,7 +22,7 @@ const categoryName = 'food';
   console.log('seededUser: ', seededUser);
 
   const seededSubcategories = await addSubcategory(
-    subcategories.map((name): ISubcategory => ({ name, userId: seededUser.id }))
+    subcategories.map((name): INewSubcategory => ({ name, userId: seededUser.id }))
   );
   console.log('seededSubcategories: ', seededSubcategories);
 

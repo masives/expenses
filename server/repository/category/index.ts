@@ -1,7 +1,8 @@
 import * as mongoose from 'mongoose';
-import { ICategory } from '../../../types/Category';
+import { ICreatedCategory } from '../../../types/Category';
+import { addSubcategory } from '../subcategory';
 
-export interface ICategoryModel extends mongoose.Document, ICategory {}
+export interface ICategoryModel extends mongoose.Document, ICreatedCategory {}
 
 const CategorySchema: mongoose.Schema = new mongoose.Schema({
   name: {
@@ -23,8 +24,22 @@ const CategorySchema: mongoose.Schema = new mongoose.Schema({
 
 const CategoryModel: mongoose.Model<ICategoryModel> = mongoose.model('categories', CategorySchema);
 
-export const addCategory = (categoryName: string, subcategoryIds: string[], userId: string): Promise<ICategoryModel> =>
-  CategoryModel.create({ name: categoryName, subcategories: subcategoryIds, userId });
+export const addCategory = async (
+  categoryName: string,
+  subcategories: string[],
+  userId: string
+): Promise<ICategoryModel> => {
+  const addedSubcategories = await addSubcategory(
+    subcategories.map((subcategoryName) => ({
+      name: subcategoryName,
+      userId,
+    }))
+  );
+  const subcategoriesIds = addedSubcategories.map((subcategory) => subcategory.id);
+  const createdCategory = await CategoryModel.create({ name: categoryName, subcategories: subcategoriesIds, userId });
+  const populatedCategory = await createdCategory.populate('subcategories').execPopulate();
+  return populatedCategory;
+};
 
 export const findCategoriesForUser = (userId: string): mongoose.DocumentQuery<ICategoryModel[], ICategoryModel, {}> =>
   CategoryModel.find({ userId }).populate('subcategories');
@@ -34,3 +49,6 @@ export const findCategoryById = (categoryId: string): mongoose.DocumentQuery<ICa
 
 export const appendSubcategory = (categoryId, subcategoryId): mongoose.Query<any> =>
   CategoryModel.updateOne({ _id: categoryId }, { $push: { subcategories: subcategoryId } });
+
+export const updateCategory = async (categoryId: string, update: ICategoryModel): Promise<mongoose.Query<any>> =>
+  CategoryModel.findOneAndUpdate({ _id: categoryId }, { ...update }, { new: true }).populate('subcategories');
