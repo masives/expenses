@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { ICreatedCategory } from '../../../types/Category';
+import { ICreatedCategory, ICategoryUpdate } from '../../../types/Category';
 import { addSubcategory } from '../subcategory';
 
 export interface ICategoryModel extends mongoose.Document, ICreatedCategory {}
@@ -50,5 +50,5 @@ export const findCategoryById = (categoryId: string): mongoose.DocumentQuery<ICa
 export const appendSubcategory = (categoryId, subcategoryId): mongoose.Query<any> =>
   CategoryModel.updateOne({ _id: categoryId }, { $push: { subcategories: subcategoryId } });
 
-export const updateCategory = async (categoryId: string, update: ICategoryModel): Promise<mongoose.Query<any>> =>
+export const updateCategory = async (categoryId: string, update: ICategoryUpdate): Promise<mongoose.Query<any>> =>
   CategoryModel.findOneAndUpdate({ _id: categoryId }, { ...update }, { new: true }).populate('subcategories');

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiEndpoint, getLoggedInHeaders } from '../../../test-utils';
-import { ICreatedCategory } from 'types/Category';
+import { ICreatedCategory, ICreatedSubcategory } from 'types/Category';
 
 describe('Api - category', () => {
   const headers = getLoggedInHeaders();
@@ -79,15 +79,15 @@ describe('Api - category', () => {
       );
 
       // when
-      const newSubcategories = [{ name: 'water' }];
+      const newSubcategory = { name: 'water' };
       const updatedCategoryName = 'repairs';
       const categoryToBeUpdated = createdSubcategories.find(
         (subcategory) => subcategory.name === changedSubcategoryName
       );
-      const updatedCategory = { id: (categoryToBeUpdated as any)._id, name: updatedCategoryName };
+      const updatedCategory = { ...categoryToBeUpdated, name: updatedCategoryName };
 
       const categoryUpdate = {
-        subcategories: [...newSubcategories, updatedCategory],
+        subcategories: [newSubcategory, updatedCategory],
       };
 
       const response = await axios.put(`${apiEndpoint}/category/${createdCategory._id}`, categoryUpdate, {
@@ -96,12 +96,10 @@ describe('Api - category', () => {
 
       // then
       expect(response.data._id).toEqual(createdCategory._id);
-      // by to zadziałało chyba musze obie tablice posortować według tego samego klucza
       expect(response.data.subcategories).toEqual(
         expect.arrayContaining([
-          // 3 obiekty, 1 nowe, jeden stary, jeden update
-          expect.objectContaining(updatedCategory),
-          expect.objectContaining(categoryNotToBeUpdated as any),
+          expect.objectContaining(newSubcategory),
+          expect.objectContaining(categoryNotToBeUpdated as ICreatedSubcategory),
           expect.objectContaining(updatedCategory),
         ])
       );
