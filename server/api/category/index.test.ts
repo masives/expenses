@@ -5,6 +5,33 @@ import { ICreatedCategory, ICreatedSubcategory } from 'types/Category';
 describe('Api - category', () => {
   const headers = getLoggedInHeaders();
 
+  it('GET /category should return multiple categories', async () => {
+    // given
+    const newCategory1 = {
+      categoryName: 'House',
+      subcategories: ['rent', 'electricity', 'internet'],
+    };
+    const newCategory2 = {
+      categoryName: 'Kid',
+      subcategories: ['medication', 'clothes'],
+    };
+    const { data: createdCategory1 } = await axios.post<ICreatedCategory>(`${apiEndpoint}/category`, newCategory1, {
+      headers,
+    });
+    const { data: createdCategory2 } = await axios.post<ICreatedCategory>(`${apiEndpoint}/category`, newCategory2, {
+      headers,
+    });
+    // when
+    const response = await axios.get<ICreatedCategory[]>(`${apiEndpoint}/category`, {
+      headers,
+    });
+
+    // expect
+    expect(response.data).toEqual(
+      expect.arrayContaining([expect.objectContaining(createdCategory1), expect.objectContaining(createdCategory2)])
+    );
+  });
+
   it('GET /category/id should return single category', async () => {
     // given
     const categoryName = 'House';
