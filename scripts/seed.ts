@@ -28,19 +28,11 @@ const {
   console.log('seededUsers: ', { seededAdminUser, seededTestUser });
 
   // subcategories
-  const subcategories = ['food in work', 'groceries', 'restaurant', 'snack'].map(
-    (name): INewSubcategory => ({ name, userId: seededAdminUser.id })
-  );
-  const seededSubcategories = await addSubcategory(subcategories);
-  console.log('seededSubcategories: ', seededSubcategories);
+  const subcategories = ['food in work', 'groceries', 'restaurant', 'snack'];
 
   // category
   const categoryName = 'food';
-  const seededCategory = await addCategory(
-    categoryName,
-    seededSubcategories.map((subcategory) => subcategory.id),
-    seededAdminUser.id
-  );
+  const seededCategory = await addCategory(categoryName, subcategories, seededAdminUser.id);
   console.log('seededCategory', seededCategory);
 
   process.exit(0);
