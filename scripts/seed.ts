@@ -6,7 +6,15 @@ import { addSubcategory } from '../server/repository/subcategory';
 import { INewSubcategory } from '../types/Category';
 import { addCategory } from '../server/repository/category';
 
-const { ADMIN_USERNAME, ADMIN_PASSWORD, MONGO_SERVICE_HOST, MONGODB_PORT_NUMBER, MONGO_DATABASE_NAME } = process.env;
+const {
+  ADMIN_USERNAME,
+  ADMIN_PASSWORD,
+  TEST_USERNAME,
+  TEST_PASSWORD,
+  MONGO_SERVICE_HOST,
+  MONGODB_PORT_NUMBER,
+  MONGO_DATABASE_NAME,
+} = process.env;
 
 const subcategories = ['food in work', 'groceries', 'restaurant', 'snack'];
 
@@ -18,18 +26,19 @@ const categoryName = 'food';
     { useNewUrlParser: true }
   );
   mongooseConnection.connection.db.dropDatabase();
-  const seededUser = await addUser({ password: String(ADMIN_PASSWORD), username: String(ADMIN_USERNAME) });
-  console.log('seededUser: ', seededUser);
+  const seededAdminUser = await addUser({ password: String(ADMIN_PASSWORD), username: String(ADMIN_USERNAME) });
+  const seededTestUser = await addUser({ password: String(TEST_PASSWORD), username: String(TEST_USERNAME) });
+  console.log('seededUser: ', { seededAdminUser, seededTestUser });
 
   const seededSubcategories = await addSubcategory(
-    subcategories.map((name): INewSubcategory => ({ name, userId: seededUser.id }))
+    subcategories.map((name): INewSubcategory => ({ name, userId: seededAdminUser.id }))
   );
   console.log('seededSubcategories: ', seededSubcategories);
 
   const seededCategory = await addCategory(
     categoryName,
     seededSubcategories.map((subcategory) => subcategory.id),
-    seededUser.id
+    seededAdminUser.id
   );
   console.log('seededCategory', seededCategory);
 
