@@ -162,7 +162,7 @@ describe('Api - category', () => {
       // given
       const subcategories = ['rent', 'electricity', 'internet'];
       // when
-      axios
+      await axios
         .post(
           `${apiEndpoint}/category`,
           { subcategories },
@@ -170,7 +170,7 @@ describe('Api - category', () => {
             headers,
           }
         )
-        .catch((response) => {
+        .catch(({ response }) => {
           // then
           expect(response.status).toEqual(400);
         });
@@ -180,7 +180,7 @@ describe('Api - category', () => {
       // given
       const categoryName = 'House';
       // when
-      axios
+      await axios
         .post(
           `${apiEndpoint}/category`,
           { categoryName },
@@ -188,7 +188,7 @@ describe('Api - category', () => {
             headers,
           }
         )
-        .catch((response) => {
+        .catch(({ response }) => {
           // then
           expect(response.status).toEqual(400);
         });

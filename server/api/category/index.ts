@@ -27,6 +27,9 @@ categoryRouter.post('/', async (req: express.Request, res: express.Response) => 
   const userId = req.user.userId;
   const { subcategories, categoryName } = req.body;
 
+  if (!categoryName || !subcategories || !subcategories.length)
+    return res.status(400).send('Please fill all required fields');
+
   const createCategory$ = from(addCategory(categoryName, subcategories, userId));
 
   createCategory$.subscribe({
