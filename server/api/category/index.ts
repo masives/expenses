@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { from } from 'rxjs';
 import { addCategory, findCategoriesForUser, findCategoryById } from '../../repository/category';
 import updateCategoryHandler from './updateCategory';
 
@@ -26,8 +27,12 @@ categoryRouter.post('/', async (req: express.Request, res: express.Response) => 
   const userId = req.user.userId;
   const { subcategories, categoryName } = req.body;
 
-  const category = await addCategory(categoryName, subcategories, userId);
-  res.status(200).send(category);
+  const createCategory$ = from(addCategory(categoryName, subcategories, userId));
+
+  createCategory$.subscribe({
+    error: (err) => res.status(400).send(err),
+    next: (category) => res.status(200).send(category),
+  });
 });
 
 export default categoryRouter;

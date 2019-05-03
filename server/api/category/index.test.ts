@@ -133,27 +133,65 @@ describe('Api - category', () => {
     });
   });
 
-  it('POST /category should create category with subcategories', async () => {
-    // given
-    const categoryName = 'House';
-    const subcategories = ['rent', 'electricity', 'internet'];
-    const newCategory = {
-      categoryName,
-      subcategories,
-    };
-    // when
-    const response = await axios.post(`${apiEndpoint}/category`, newCategory, {
-      headers,
+  describe('POST /category', () => {
+    it('should create category with subcategories', async () => {
+      // given
+      const categoryName = 'House';
+      const subcategories = ['rent', 'electricity', 'internet'];
+      const newCategory = {
+        categoryName,
+        subcategories,
+      };
+      // when
+      const response = await axios.post(`${apiEndpoint}/category`, newCategory, {
+        headers,
+      });
+
+      // then
+      expect(response.data).toMatchObject({
+        _id: expect.any(String),
+        name: newCategory.categoryName,
+        subcategories: newCategory.subcategories.map((subcategoryName) => ({
+          _id: expect.any(String),
+          name: subcategoryName,
+        })),
+      });
     });
 
-    // then
-    expect(response.data).toMatchObject({
-      _id: expect.any(String),
-      name: newCategory.categoryName,
-      subcategories: newCategory.subcategories.map((subcategoryName) => ({
-        _id: expect.any(String),
-        name: subcategoryName,
-      })),
+    it('should return error on lack of name', async () => {
+      // given
+      const subcategories = ['rent', 'electricity', 'internet'];
+      // when
+      axios
+        .post(
+          `${apiEndpoint}/category`,
+          { subcategories },
+          {
+            headers,
+          }
+        )
+        .catch((response) => {
+          // then
+          expect(response.status).toEqual(400);
+        });
+    });
+
+    it('should return error on lack of subcategories', async () => {
+      // given
+      const categoryName = 'House';
+      // when
+      axios
+        .post(
+          `${apiEndpoint}/category`,
+          { categoryName },
+          {
+            headers,
+          }
+        )
+        .catch((response) => {
+          // then
+          expect(response.status).toEqual(400);
+        });
     });
   });
 });
