@@ -25,6 +25,7 @@ const Categories: NextFunctionComponent = () => {
           <h3>subcategories</h3>
           {category.subcategories.map((subcategory) => (
             <li key={subcategory._id}>{subcategory.name}</li>
+            // https://www.npmjs.com/package/@fortawesome/react-fontawesome
           ))}
         </div>
       ))}
