@@ -34,6 +34,8 @@ const Categories: NextFunctionComponent = () => {
 };
 
 // Categories.getInitialProps = async (ctx: NextContext) => {
+
+// https://github.com/zeit/next.js/issues/2364 - how to access cookie on initial request
 //   console.log('poleciał get initial props');
 //   const categories = await axios.get('http://localhost:3000/api/category').catch((err) => console.log(err));
 //   if (!categories && ctx.res) ctx.res.statusCode = 404;
