@@ -8,6 +8,7 @@ interface IProps {
   value: string | number;
   type?: string;
   error?: mongoose.Error;
+  required?: boolean;
 }
 
 const input: React.FunctionComponent<IProps> = ({
@@ -17,6 +18,7 @@ const input: React.FunctionComponent<IProps> = ({
   type = 'text',
   value = '',
   error,
+  required = false,
 }: IProps) => (
   <label htmlFor={`form-element-${fieldName}`}>
     <div>
@@ -28,6 +30,7 @@ const input: React.FunctionComponent<IProps> = ({
       id={`form-element-${fieldName}`}
       onChange={(event) => onChange(event.target.value)}
       value={value}
+      required={required}
     />
   </label>
 );

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import axios from 'axios';
+import { NextFunctionComponent } from 'next';
+import Link from 'next/link';
+import Router from 'next/router';
 
 import { Input, Button } from '../../../components';
-import { NextFunctionComponent, NextContext } from 'next';
-import Link from 'next/link';
 import { INewCategory } from '../../../types/Category';
-
 
 const CreateCategory: NextFunctionComponent = () => {
   const [categoryName, setCategoryName] = React.useState<string>('');
@@ -29,25 +29,33 @@ const CreateCategory: NextFunctionComponent = () => {
         onSubmit={(event) => {
           event.preventDefault();
           const newCategory: INewCategory = { name: categoryName, subcategories };
-          console.log('fire!', newCategory);
-          axios.post('/api/category', newCategory).then((response) => {
-            console.log(response.data);
+          axios.post('/api/category', newCategory).then(() => {
+            Router.push('/categories');
           });
+          // error handling on ui will not be added now
         }}
       >
-        <Input label="Category name" fieldName="categoryName" onChange={setCategoryName} value={categoryName} />
+        <Input
+          label="Category name"
+          fieldName="categoryName"
+          onChange={setCategoryName}
+          value={categoryName}
+          required
+        />
         <h2>Subcategories</h2>
-        {subcategories.map((subcategoryName, index) => (
-          <div key={index}>
-            <Input
-              label={`subcategory ${index}`}
-              fieldName={`subcategory-${index}`}
-              value={subcategoryName}
-              onChange={(value) => updateSubcategory(value, index)}
-            />
-            <Button onChange={() => removeSubcategory(index)} label="Remove subcategory" />
-          </div>
-        ))}
+        {(!!subcategories.length &&
+          subcategories.map((subcategoryName, index) => (
+            <div key={index}>
+              <Input
+                label={`subcategory ${index}`}
+                fieldName={`subcategory-${index}`}
+                value={subcategoryName}
+                onChange={(value) => updateSubcategory(value, index)}
+                required
+              />
+              <Button onChange={() => removeSubcategory(index)} label="Remove subcategory" />
+            </div>
+          ))) || <p>subcategories cannot be empty</p>}
         <Button onChange={addSubcategory} label="Add subcategory" />
         <Button type="submit" label="submit" />
       </form>
