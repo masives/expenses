@@ -3,6 +3,9 @@ import App, { Container } from 'next/app';
 import Router from 'next/router';
 import axios from 'axios';
 
+// have to preload fontawesome styles to avoid flashing
+import '@fortawesome/fontawesome-svg-core/styles.css';
+
 class MyApp extends App {
   static getInitialProps = async ({ Component, ctx }) => {
     let pageProps = {};

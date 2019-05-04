@@ -3,8 +3,9 @@ import axios from 'axios';
 import { NextFunctionComponent } from 'next';
 import Link from 'next/link';
 import Router from 'next/router';
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 
-import { Input, Button } from '../../../components';
+import { Input, Button, IconButton } from '../../../components';
 import { INewCategory } from '../../../types/Category';
 
 const CreateCategory: NextFunctionComponent = () => {
@@ -53,7 +54,7 @@ const CreateCategory: NextFunctionComponent = () => {
                 onChange={(value) => updateSubcategory(value, index)}
                 required
               />
-              <Button onChange={() => removeSubcategory(index)} label="Remove subcategory" />
+              <IconButton onChange={() => removeSubcategory(index)} icon={faMinusCircle} />
             </div>
           ))) || <p>subcategories cannot be empty</p>}
         <Button onChange={addSubcategory} label="Add subcategory" />
