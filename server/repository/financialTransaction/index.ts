@@ -42,3 +42,7 @@ export const addFinancialTransaction = async (
 ): Promise<IFinancialTransactionModel> => {
   return FinancialTransactionModel.create(newFinancialTransaction);
 };
+
+export const findFinancialTransactionsForUser = async (userId: string): Promise<IFinancialTransactionModel[]> => {
+  return FinancialTransactionModel.find({ userId });
+};
